@@ -31,9 +31,9 @@ class MDP:
 
         for i in range(len(mdv_struct.IXBF_array)):
             mdp_data = MDP.MDP_data()
-            current_IXBF_array = mdv_struct.IXBF_array[i]
-            f.seek(current_IXBF_array.far_offset)
-            face_end = current_IXBF_array.far_offset + current_IXBF_array.far_size
+            current_IXBF_info = mdv_struct.IXBF_array[i]
+            f.seek(current_IXBF_info.far_offset)
+            face_end = current_IXBF_info.far_offset + current_IXBF_info.far_size
             start_direction = -1
             f1 = Stream.Read16UIntegerBE(f)
             f2 = Stream.Read16UIntegerBE(f)
@@ -54,28 +54,28 @@ class MDP:
                     f1 = f2
                     f2 = f3
 
-            current_VXBF_array = mdv_struct.VXBF_array[i]
-            current_vsize_array = mdv_struct.vsize_array[i]
+            current_VXBF_info = mdv_struct.VXBF_array[i]
+            current_vsize = mdv_struct.vsize_array[i]
 
-            f.seek(current_VXBF_array.far_offset)
-            vert_count = int(current_VXBF_array.far_size / current_vsize_array)
+            f.seek(current_VXBF_info.far_offset)
+            vert_count = int(current_VXBF_info.far_size / current_vsize)
             for j in range(vert_count):
                 back = f.tell()
                 
                 xyz_data = Stream.Read32FloatBEArray(f, 3)
                 mdp_data.vert_array.append(Vector(xyz_data))
-                if current_vsize_array in [24,28]:
+                if current_vsize in [24,28]:
                     f.seek(back + 20)
                     u = Float.ConvertHalf2Float(Stream.Read16UIntegerBE(f))
                     v = Float.ConvertHalf2Float(Stream.Read16UIntegerBE(f))
                     mdp_data.uv_array.append([u,1-v])
-                if current_vsize_array in [32,36,40,44,48,52,56]:
+                if current_vsize in [32,36,40,44,48,52,56]:
                     f.seek(back + 24)
                     u = Float.ConvertHalf2Float(Stream.Read16UIntegerBE(f))
                     v = Float.ConvertHalf2Float(Stream.Read16UIntegerBE(f))
                     mdp_data.uv_array.append([u,1-v])
-                f.seek(back + current_vsize_array) 
+                f.seek(back + current_vsize) 
 
-            if current_vsize_array not in [20]:
+            if current_vsize not in [20]:
                 self.data_array.append(mdp_data)
                 total_verts += vert_count
