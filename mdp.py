@@ -63,7 +63,7 @@ class MDP:
                 back = f.tell()
                 
                 xyz_data = Stream.Read32FloatBEArray(f, 3)
-                mdp_data.vert_array.append(Vector(xyz_data))
+                mdp_data.vert_array.append(Vector([xyz_data[0], -xyz_data[2], xyz_data[1]]))
                 if current_vsize in [24,28]:
                     f.seek(back + 20)
                     u = Float.ConvertHalf2Float(Stream.Read16UIntegerBE(f))

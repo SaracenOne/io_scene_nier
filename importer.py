@@ -32,7 +32,7 @@ class Importer:
         mdp.parse_mdp_file(mdp_file, mdv)
 
         model_output = ModelOutput()
-        model_output.create_model(mdp)
+        model_output.create_model(mdv, mdp)
 
     def do_import(self):
         mdv_file = None

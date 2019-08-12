@@ -20,7 +20,7 @@ bl_info = {
 
 from .importer import Importer
 
-class ImportNierModel(bpy.types.Operator, ImportHelper):
+class NIER_OT_ImportNierModel(bpy.types.Operator, ImportHelper):
     """Load a Nier model file."""
 
     bl_idname = 'import_scene.nier'
@@ -41,26 +41,15 @@ class ImportNierModel(bpy.types.Operator, ImportHelper):
         return {'FINISHED'}
 
 def menu_func_import(self, context):
-    self.layout.operator(ImportNierModel.bl_idname, text="Nier Model (.mdv)")
+    self.layout.operator(NIER_OT_ImportNierModel.bl_idname, text="Nier Model (.mdv)")
 
+classes = (NIER_OT_ImportNierModel)
 
 def register():
-    if bpy.app.version >= (2, 80, 0):
-        bpy.utils.register_class(ImportNierModel)
-        bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
-    else:
-        bpy.utils.register_module(__name__)
-        bpy.types.INFO_MT_file_import.append(menu_func_import)
+    bpy.utils.register_class(NIER_OT_ImportNierModel)
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
 
 
 def unregister():
-    if bpy.app.version >= (2, 80, 0):
-        bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
-        bpy.utils.unregister_class(ImportNierModel)
-    else:
-        bpy.utils.unregister_module(__name__)
-        bpy.types.INFO_MT_file_import.remove(menu_func_import)
-
-
-if __name__ == '__main__':
-    register()
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
+    bpy.utils.unregister_class(NIER_OT_ImportNierModel)
